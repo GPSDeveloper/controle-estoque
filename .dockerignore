@@ -1,0 +1,11 @@
+**/.git
+**/.vs
+**/bin
+**/obj
+**/.DS_Store
+**/*.user
+**/*.suo
+README.md
+.env
+.env.*
+!.env.example

@@ -1,0 +1,36 @@
+## Build
+[Dd]ebug/
+[Rr]elease/
+[Bb]in/
+[Oo]bj/
+*.user
+*.suo
+.vs/
+*.db
+*.db-shm
+*.db-wal
+
+## NuGet
+*.nupkg
+**/packages/*
+!**/packages/build/
+
+## IDE
+.idea/
+*.swp
+*~
+
+## OS
+.DS_Store
+Thumbs.db
+
+## Secrets
+appsettings.Development.json
+appsettings.Local.json
+.env
+
+## Docker
+docker-compose.override.yml
+
+## Publish
+publish/
