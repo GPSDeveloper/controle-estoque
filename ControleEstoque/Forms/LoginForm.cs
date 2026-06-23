@@ -14,13 +14,12 @@ public class LoginForm : Form
         ThemeHelper.ConfigurarFormulario(this, "Login - Controle de Estoque", 450, 380);
         FormBorderStyle = FormBorderStyle.FixedDialog;
         MaximizeBox = false;
-
-        Controls.Add(ThemeHelper.CriarCabecalho());
+        var cabecalho = ThemeHelper.CriarCabecalho();
 
         var panel = new Panel
         {
             Dock = DockStyle.Fill,
-            Padding = new Padding(40, 90, 40, 20)
+            Padding = new Padding(40, 20, 40, 20)
         };
 
         var lblLogin = new Label { Text = "Login:", AutoSize = true, Location = new Point(0, 20) };
@@ -39,7 +38,9 @@ public class LoginForm : Form
         btnSair.Click += (_, _) => Close();
 
         panel.Controls.AddRange(new Control[] { lblLogin, _txtLogin, lblSenha, _txtSenha, btnEntrar, btnSair });
+        // Mantem a ordem de dock correta: cabecalho (Top) e conteudo (Fill).
         Controls.Add(panel);
+        Controls.Add(cabecalho);
 
         AcceptButton = btnEntrar;
         _txtLogin.Focus();
