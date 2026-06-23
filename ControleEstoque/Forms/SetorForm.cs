@@ -75,14 +75,13 @@ public class SetorForm : Form
 
     private void Adicionar()
     {
-        var (sucesso, mensagem) = _service.Adicionar(_txtNome.Text);
-        MessageBox.Show(mensagem, sucesso ? "Sucesso" : "Atenção", MessageBoxButtons.OK,
-            sucesso ? MessageBoxIcon.Information : MessageBoxIcon.Warning);
-        if (sucesso)
-        {
-            _txtNome.Clear();
-            CarregarDados();
-        }
+        OperationFeedbackHelper.ExecutarComRetryConcorrencia(
+            () => _service.Adicionar(_txtNome.Text),
+            onSuccess: () =>
+            {
+                _txtNome.Clear();
+                CarregarDados();
+            });
     }
 
     private void Editar()
@@ -99,11 +98,9 @@ public class SetorForm : Form
         if (string.IsNullOrWhiteSpace(novoNome) || novoNome == nomeAtual)
             return;
 
-        var (sucesso, mensagem) = _service.Edititar(id.Value, novoNome);
-        MessageBox.Show(mensagem, sucesso ? "Sucesso" : "Atenção", MessageBoxButtons.OK,
-            sucesso ? MessageBoxIcon.Information : MessageBoxIcon.Warning);
-        if (sucesso)
-            CarregarDados();
+        OperationFeedbackHelper.ExecutarComRetryConcorrencia(
+            () => _service.Editar(id.Value, novoNome),
+            onSuccess: CarregarDados);
     }
 
     private void Excluir()
@@ -118,10 +115,8 @@ public class SetorForm : Form
         if (MessageBox.Show("Deseja excluir o setor selecionado?", "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
             return;
 
-        var (sucesso, mensagem) = _service.Excluir(id.Value);
-        MessageBox.Show(mensagem, sucesso ? "Sucesso" : "Atenção", MessageBoxButtons.OK,
-            sucesso ? MessageBoxIcon.Information : MessageBoxIcon.Warning);
-        if (sucesso)
-            CarregarDados();
+        OperationFeedbackHelper.ExecutarComRetryConcorrencia(
+            () => _service.Excluir(id.Value),
+            onSuccess: CarregarDados);
     }
 }

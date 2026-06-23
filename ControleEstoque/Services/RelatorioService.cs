@@ -22,17 +22,17 @@ public class RelatorioService
             .ToList();
 
         var itens = saidas
-            .GroupBy(s => s.Material.Nome)
+            .GroupBy(s => new { s.Material.Nome, s.PrecoUnitarioNaSaida })
             .Select(g =>
             {
                 var qtd = g.Sum(s => s.Quantidade);
-                var preco = g.First().Material.PrecoUnitario;
+                var preco = g.Key.PrecoUnitarioNaSaida;
                 return new RelatorioItem
                 {
-                    MaterialNome = g.Key,
+                    MaterialNome = g.Key.Nome,
                     Quantidade = qtd,
                     PrecoUnitario = preco,
-                    PrecoTotal = qtd * preco
+                    PrecoTotal = g.Sum(x => x.Quantidade * x.PrecoUnitarioNaSaida)
                 };
             })
             .OrderBy(i => i.MaterialNome)
@@ -63,17 +63,17 @@ public class RelatorioService
             .ToList();
 
         var itens = saidas
-            .GroupBy(s => s.Material.Nome)
+            .GroupBy(s => new { s.Material.Nome, s.PrecoUnitarioNaSaida })
             .Select(g =>
             {
                 var qtd = g.Sum(s => s.Quantidade);
-                var preco = g.First().Material.PrecoUnitario;
+                var preco = g.Key.PrecoUnitarioNaSaida;
                 return new RelatorioItem
                 {
-                    MaterialNome = g.Key,
+                    MaterialNome = g.Key.Nome,
                     Quantidade = qtd,
                     PrecoUnitario = preco,
-                    PrecoTotal = qtd * preco
+                    PrecoTotal = g.Sum(x => x.Quantidade * x.PrecoUnitarioNaSaida)
                 };
             })
             .OrderBy(i => i.MaterialNome)

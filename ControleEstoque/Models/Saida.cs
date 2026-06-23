@@ -6,6 +6,7 @@ public class Saida
     public int MaterialId { get; set; }
     public Material Material { get; set; } = null!;
     public decimal Quantidade { get; set; }
+    public decimal PrecoUnitarioNaSaida { get; set; }
     public string NomeRetirante { get; set; } = string.Empty;
     public TipoIdentificacao TipoIdentificacao { get; set; }
     public string Identificacao { get; set; } = string.Empty;

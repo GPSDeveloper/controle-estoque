@@ -86,6 +86,10 @@ namespace ControleEstoque.Migrations
                     .HasMaxLength(200)
                     .HasColumnType("character varying(200)");
 
+                b.Property<decimal>("PrecoUnitarioNaSaida")
+                    .HasPrecision(18, 2)
+                    .HasColumnType("numeric(18,2)");
+
                 b.Property<decimal>("Quantidade")
                     .HasPrecision(18, 2)
                     .HasColumnType("numeric(18,2)");

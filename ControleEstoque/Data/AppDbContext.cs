@@ -44,6 +44,7 @@ public class AppDbContext : DbContext
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Quantidade).HasPrecision(18, 2);
+            entity.Property(e => e.PrecoUnitarioNaSaida).HasPrecision(18, 2);
             entity.Property(e => e.NomeRetirante).HasMaxLength(200).IsRequired();
             entity.Property(e => e.Identificacao).HasMaxLength(50).IsRequired();
             entity.Property(e => e.TipoIdentificacao).HasConversion<int>();

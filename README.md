@@ -130,7 +130,7 @@ dotnet restore
 dotnet ef database update
 ```
 
-> As migrations já estão incluídas no projeto. O usuário administrador é criado automaticamente na primeira execução.
+> As migrations já estão incluídas no projeto (incluindo a coluna de preço histórico nas saídas). O usuário administrador é criado automaticamente na primeira execução.
 
 ### 5. Executar o sistema
 
@@ -268,8 +268,8 @@ controle-estoque/
 
 ## Relatórios
 
-- **Mensal:** materiais retirados por setor e mês, com preço total gasto
-- **Anual:** materiais retirados por setor e ano (2026–2100)
+- **Mensal:** materiais retirados por setor e mês, com preço total gasto (considerando o preço no momento da retirada)
+- **Anual:** materiais retirados por setor e ano (2026–2100), também com preço histórico da saída
 - **Inventário:** todos os materiais em estoque com localização e valores
 
 Todos os relatórios podem ser **visualizados**, **impressos** ou **salvos em PDF**.
@@ -289,5 +289,7 @@ Todos os relatórios podem ser **visualizados**, **impressos** ou **salvos em PD
 **Porta 5432 em uso:** altere `POSTGRES_PORT` no arquivo `.env` (ex.: `5433`) e atualize o `appsettings.json` com a mesma porta.
 
 **Migrations não aplicadas:** execute `docker compose up migrate --build` ou `dotnet ef database update` na pasta `ControleEstoque`.
+
+**Conflito de concorrência no estoque:** em cenários com múltiplos usuários retirando/editando ao mesmo tempo, o sistema pode retornar "Conflito de concorrência no estoque. Tente novamente.". Basta repetir a operação; o sistema usa transações serializáveis com retentativa automática para proteger o saldo.
 
 **Login inválido:** use `almoxarifado12` / `estoque123`. O usuário é criado automaticamente na primeira execução com banco vazio.

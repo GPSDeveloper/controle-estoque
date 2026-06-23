@@ -63,24 +63,21 @@ public class AdicionarMaterialForm : Form
 
     private void Adicionar()
     {
-        var (sucesso, mensagem) = _service.Adicionar(
-            _txtNome.Text,
-            _numQuantidade.Value,
-            _numPreco.Value,
-            _txtLocalizacao.Text,
-            _chkValidade.Checked,
-            _chkValidade.Checked ? _dtpValidade.Value : null);
-
-        MessageBox.Show(mensagem, sucesso ? "Sucesso" : "Atenção", MessageBoxButtons.OK,
-            sucesso ? MessageBoxIcon.Information : MessageBoxIcon.Warning);
-
-        if (sucesso)
-        {
-            _txtNome.Clear();
-            _numQuantidade.Value = 1;
-            _numPreco.Value = 0;
-            _txtLocalizacao.Clear();
-            _chkValidade.Checked = false;
-        }
+        OperationFeedbackHelper.ExecutarComRetryConcorrencia(
+            () => _service.Adicionar(
+                _txtNome.Text,
+                _numQuantidade.Value,
+                _numPreco.Value,
+                _txtLocalizacao.Text,
+                _chkValidade.Checked,
+                _chkValidade.Checked ? _dtpValidade.Value : null),
+            onSuccess: () =>
+            {
+                _txtNome.Clear();
+                _numQuantidade.Value = 1;
+                _numPreco.Value = 0;
+                _txtLocalizacao.Clear();
+                _chkValidade.Checked = false;
+            });
     }
 }

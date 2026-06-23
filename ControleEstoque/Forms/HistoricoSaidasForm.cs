@@ -93,19 +93,19 @@ public class HistoricoSaidasForm : Form
             return;
 
         var dados = dialog.ObterDados();
-        var (sucesso, mensagem) = _service.Editar(
-            id.Value,
-            dados.MaterialId,
-            dados.Quantidade,
-            dados.Nome,
-            dados.Tipo,
-            dados.Identificacao,
-            dados.SetorId);
-
-        MessageBox.Show(mensagem, sucesso ? "Sucesso" : "Atenção", MessageBoxButtons.OK,
-            sucesso ? MessageBoxIcon.Information : MessageBoxIcon.Warning);
-        if (sucesso)
-            CarregarDados();
+        OperationFeedbackHelper.ExecutarComRetryConcorrencia(
+            () => _service.Editar(
+                id.Value,
+                dados.MaterialId,
+                dados.Quantidade,
+                dados.Nome,
+                dados.Tipo,
+                dados.Identificacao,
+                dados.SetorId),
+            onSuccess: () =>
+            {
+                CarregarDados();
+            });
     }
 
     private void Excluir()
@@ -121,10 +121,11 @@ public class HistoricoSaidasForm : Form
                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
             return;
 
-        var (sucesso, mensagem) = _service.Excluir(id.Value);
-        MessageBox.Show(mensagem, sucesso ? "Sucesso" : "Atenção", MessageBoxButtons.OK,
-            sucesso ? MessageBoxIcon.Information : MessageBoxIcon.Warning);
-        if (sucesso)
-            CarregarDados();
+        OperationFeedbackHelper.ExecutarComRetryConcorrencia(
+            () => _service.Excluir(id.Value),
+            onSuccess: () =>
+            {
+                CarregarDados();
+            });
     }
 }

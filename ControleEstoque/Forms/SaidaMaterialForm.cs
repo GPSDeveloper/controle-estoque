@@ -144,24 +144,21 @@ public class SaidaMaterialForm : Form
         }
 
         var tipo = _rbCpf.Checked ? TipoIdentificacao.CPF : TipoIdentificacao.Matricula;
-        var (sucesso, mensagem) = _saidaService.Registrar(
-            material.Id,
-            _numQuantidade.Value,
-            _txtNome.Text,
-            tipo,
-            _txtIdentificacao.Text,
-            setorId);
-
-        MessageBox.Show(mensagem, sucesso ? "Sucesso" : "Atenção", MessageBoxButtons.OK,
-            sucesso ? MessageBoxIcon.Information : MessageBoxIcon.Warning);
-
-        if (sucesso)
-        {
-            _materiais = _materialService.ListarTodos();
-            _txtNome.Clear();
-            _txtIdentificacao.Clear();
-            _numQuantidade.Value = 1;
-            AtualizarDisponivel();
-        }
+        OperationFeedbackHelper.ExecutarComRetryConcorrencia(
+            () => _saidaService.Registrar(
+                material.Id,
+                _numQuantidade.Value,
+                _txtNome.Text,
+                tipo,
+                _txtIdentificacao.Text,
+                setorId),
+            onSuccess: () =>
+            {
+                _materiais = _materialService.ListarTodos();
+                _txtNome.Clear();
+                _txtIdentificacao.Clear();
+                _numQuantidade.Value = 1;
+                AtualizarDisponivel();
+            });
     }
 }
