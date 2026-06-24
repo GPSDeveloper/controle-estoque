@@ -12,25 +12,35 @@ public class AdicionarMaterialForm : Form
     private readonly TextBox _txtLocalizacao = new() { Width = 350 };
     private readonly CheckBox _chkValidade = new() { Text = "Possui data de validade", AutoSize = true };
     private readonly DateTimePicker _dtpValidade = new() { Width = 200, Enabled = false, Format = DateTimePickerFormat.Short };
+    private Panel _conteudo = null!;
 
     public AdicionarMaterialForm()
     {
         ThemeHelper.ConfigurarFormulario(this, "Adicionar Material");
-        Controls.Add(ThemeHelper.CriarCabecalho());
+        _conteudo = ThemeHelper.CriarConteudoPrincipal(this, 760, new Padding(0));
         MontarInterface();
     }
 
     private void MontarInterface()
     {
-        var panel = new Panel { Dock = DockStyle.Fill, Padding = new Padding(30, 90, 30, 20) };
-        int y = 0;
+        var formGrid = new TableLayoutPanel
+        {
+            Dock = DockStyle.Top,
+            AutoSize = true,
+            AutoSizeMode = AutoSizeMode.GrowAndShrink,
+            ColumnCount = 2,
+            Margin = new Padding(0)
+        };
+        formGrid.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 200));
+        formGrid.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
 
         void AddField(string label, Control control)
         {
-            panel.Controls.Add(new Label { Text = label, AutoSize = true, Location = new Point(0, y) });
-            control.Location = new Point(0, y + 22);
-            panel.Controls.Add(control);
-            y += 55;
+            var linha = formGrid.RowCount++;
+            formGrid.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            formGrid.Controls.Add(new Label { Text = label, AutoSize = true, Margin = new Padding(0, 8, 8, 0) }, 0, linha);
+            control.Dock = DockStyle.Top;
+            formGrid.Controls.Add(control, 1, linha);
         }
 
         AddField("Nome do material:", _txtNome);
@@ -38,27 +48,27 @@ public class AdicionarMaterialForm : Form
         AddField("Preço unitário (R$):", _numPreco);
         AddField("Localização:", _txtLocalizacao);
 
-        _chkValidade.Location = new Point(0, y);
         _chkValidade.CheckedChanged += (_, _) => _dtpValidade.Enabled = _chkValidade.Checked;
-        panel.Controls.Add(_chkValidade);
-        y += 30;
+        var linhaCheck = formGrid.RowCount++;
+        formGrid.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        formGrid.Controls.Add(_chkValidade, 1, linhaCheck);
 
-        panel.Controls.Add(new Label { Text = "Data de validade:", AutoSize = true, Location = new Point(0, y) });
-        _dtpValidade.Location = new Point(0, y + 22);
-        panel.Controls.Add(_dtpValidade);
-        y += 60;
+        AddField("Data de validade:", _dtpValidade);
 
         var btnAdicionar = ThemeHelper.CriarBotao("Adicionar", 150, 40);
-        btnAdicionar.Location = new Point(0, y);
         btnAdicionar.Click += (_, _) => Adicionar();
 
         var btnFechar = ThemeHelper.CriarBotao("Fechar", 120, 40);
-        btnFechar.Location = new Point(160, y);
         btnFechar.BackColor = Color.Gray;
         btnFechar.Click += (_, _) => Close();
 
-        panel.Controls.AddRange(new Control[] { btnAdicionar, btnFechar });
-        Controls.Add(panel);
+        var barraAcoes = ThemeHelper.CriarBarraAcoesInferior();
+        barraAcoes.Controls.Add(btnFechar);
+        barraAcoes.Controls.Add(btnAdicionar);
+
+        _conteudo.Controls.Add(barraAcoes);
+        _conteudo.Controls.Add(new Panel { Dock = DockStyle.Top, Height = 12 });
+        _conteudo.Controls.Add(formGrid);
     }
 
     private void Adicionar()

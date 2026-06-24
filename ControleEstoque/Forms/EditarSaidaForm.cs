@@ -22,20 +22,11 @@ public class EditarSaidaForm : Form
     {
         _item = item;
         Text = "Editar Saída";
-        Size = new Size(450, 420);
+        Size = new Size(520, 430);
         StartPosition = FormStartPosition.CenterParent;
         FormBorderStyle = FormBorderStyle.FixedDialog;
         MaximizeBox = false;
         MinimizeBox = false;
-
-        int y = 15;
-        void Add(string label, Control c)
-        {
-            Controls.Add(new Label { Text = label, AutoSize = true, Location = new Point(20, y) });
-            c.Location = new Point(20, y + 20);
-            Controls.Add(c);
-            y += 50;
-        }
 
         var materiais = _materialService.ListarTodos();
         _cmbMaterial.DataSource = materiais;
@@ -55,22 +46,59 @@ public class EditarSaidaForm : Form
         _cmbSetor.ValueMember = "Id";
         _cmbSetor.SelectedValue = item.SetorId;
 
+        var painel = new Panel
+        {
+            Dock = DockStyle.Fill,
+            Padding = new Padding(20)
+        };
+
+        var grid = new TableLayoutPanel
+        {
+            Dock = DockStyle.Top,
+            AutoSize = true,
+            AutoSizeMode = AutoSizeMode.GrowAndShrink,
+            ColumnCount = 2
+        };
+        grid.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 130));
+        grid.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+
+        void Add(string label, Control c)
+        {
+            var linha = grid.RowCount++;
+            grid.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            grid.Controls.Add(new Label { Text = label, AutoSize = true, Margin = new Padding(0, 8, 8, 0) }, 0, linha);
+            c.Dock = DockStyle.Top;
+            grid.Controls.Add(c, 1, linha);
+        }
+
         Add("Material:", _cmbMaterial);
         Add("Quantidade:", _numQuantidade);
         Add("Nome:", _txtNome);
 
-        Controls.Add(new Label { Text = "Identificação:", AutoSize = true, Location = new Point(20, y) });
-        _rbCpf.Location = new Point(20, y + 20);
-        _rbMatricula.Location = new Point(100, y + 20);
-        Controls.Add(_rbCpf);
-        Controls.Add(_rbMatricula);
-        y += 45;
+        var identificacaoPanel = new FlowLayoutPanel
+        {
+            AutoSize = true,
+            AutoSizeMode = AutoSizeMode.GrowAndShrink,
+            Dock = DockStyle.Top,
+            WrapContents = false
+        };
+        identificacaoPanel.Controls.Add(_rbCpf);
+        identificacaoPanel.Controls.Add(_rbMatricula);
+        Add("Identificação:", identificacaoPanel);
         Add("CPF/Matrícula:", _txtIdentificacao);
         Add("Setor:", _cmbSetor);
 
-        var btnSalvar = new Button { Text = "Salvar", DialogResult = DialogResult.OK, Location = new Point(200, y), Width = 80 };
-        var btnCancelar = new Button { Text = "Cancelar", DialogResult = DialogResult.Cancel, Location = new Point(290, y), Width = 80 };
-        Controls.AddRange(new Control[] { btnSalvar, btnCancelar });
+        var btnSalvar = new Button { Text = "Salvar", DialogResult = DialogResult.OK, Width = 90 };
+        var btnCancelar = new Button { Text = "Cancelar", DialogResult = DialogResult.Cancel, Width = 90 };
+        var barraAcoes = ThemeHelper.CriarBarraAcoesInferior();
+        barraAcoes.Controls.Add(btnCancelar);
+        barraAcoes.Controls.Add(btnSalvar);
+
+        painel.Controls.Add(barraAcoes);
+        painel.Controls.Add(new Panel { Dock = DockStyle.Top, Height = 12 });
+        painel.Controls.Add(grid);
+        Controls.Add(painel);
+
         AcceptButton = btnSalvar;
         CancelButton = btnCancelar;
     }

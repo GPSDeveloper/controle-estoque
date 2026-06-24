@@ -9,20 +9,43 @@ public class InputDialogForm : Form
     public InputDialogForm(string titulo, string label, string valorInicial = "")
     {
         Text = titulo;
-        Size = new Size(400, 180);
+        Size = new Size(430, 190);
         StartPosition = FormStartPosition.CenterParent;
         FormBorderStyle = FormBorderStyle.FixedDialog;
         MaximizeBox = false;
         MinimizeBox = false;
 
-        var lbl = new Label { Text = label, AutoSize = true, Location = new Point(20, 20) };
+        var painel = new Panel
+        {
+            Dock = DockStyle.Fill,
+            Padding = new Padding(20)
+        };
+
+        var lbl = new Label { Text = label, AutoSize = true, Dock = DockStyle.Top, Margin = new Padding(0, 0, 0, 4) };
         _txtValor.Text = valorInicial;
-        _txtValor.Location = new Point(20, 45);
+        _txtValor.Dock = DockStyle.Top;
 
-        var btnOk = new Button { Text = "OK", DialogResult = DialogResult.OK, Location = new Point(200, 85), Width = 60 };
-        var btnCancel = new Button { Text = "Cancelar", DialogResult = DialogResult.Cancel, Location = new Point(270, 85), Width = 80 };
+        var btnOk = new Button { Text = "OK", DialogResult = DialogResult.OK, Width = 80 };
+        var btnCancel = new Button { Text = "Cancelar", DialogResult = DialogResult.Cancel, Width = 90 };
 
-        Controls.AddRange(new Control[] { lbl, _txtValor, btnOk, btnCancel });
+        var barraAcoes = new FlowLayoutPanel
+        {
+            Dock = DockStyle.Top,
+            AutoSize = true,
+            AutoSizeMode = AutoSizeMode.GrowAndShrink,
+            FlowDirection = FlowDirection.RightToLeft,
+            WrapContents = false,
+            Margin = new Padding(0, 12, 0, 0)
+        };
+        barraAcoes.Controls.Add(btnCancel);
+        barraAcoes.Controls.Add(btnOk);
+
+        painel.Controls.Add(barraAcoes);
+        painel.Controls.Add(new Panel { Dock = DockStyle.Top, Height = 12 });
+        painel.Controls.Add(_txtValor);
+        painel.Controls.Add(new Panel { Dock = DockStyle.Top, Height = 4 });
+        painel.Controls.Add(lbl);
+        Controls.Add(painel);
         AcceptButton = btnOk;
         CancelButton = btnCancel;
     }

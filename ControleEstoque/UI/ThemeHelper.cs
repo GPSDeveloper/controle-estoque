@@ -3,6 +3,7 @@ namespace ControleEstoque.UI;
 public static class ThemeHelper
 {
     public const string Instituicao = "Ministério da Saúde / SEMSRJ / Almoxarifado";
+    public const int Espacamento = 8;
     public static readonly Color CorPrimaria = Color.FromArgb(0, 51, 102);
     public static readonly Color CorSecundaria = Color.FromArgb(240, 244, 248);
     public static readonly Font FonteTitulo = new("Segoe UI", 14F, FontStyle.Bold);
@@ -55,6 +56,58 @@ public static class ThemeHelper
         form.StartPosition = FormStartPosition.CenterScreen;
         form.BackColor = CorSecundaria;
         form.Font = FonteSubtitulo;
-        form.MinimumSize = new Size(700, 500);
+        form.MinimumSize = new Size(Math.Min(largura, 700), Math.Min(altura, 500));
+    }
+
+    public static Panel CriarConteudoPrincipal(Form form, int larguraMaxima = 1000, Padding? paddingConteudo = null)
+    {
+        var areaRolagem = new Panel
+        {
+            Dock = DockStyle.Fill,
+            AutoScroll = true,
+            Padding = new Padding(24)
+        };
+
+        var conteudo = new Panel
+        {
+            AutoSize = true,
+            AutoSizeMode = AutoSizeMode.GrowAndShrink,
+            MaximumSize = new Size(larguraMaxima, 0),
+            MinimumSize = new Size(320, 0),
+            Padding = paddingConteudo ?? new Padding(0)
+        };
+
+        areaRolagem.Controls.Add(conteudo);
+
+        void ReposicionarConteudo(object? _, EventArgs __)
+        {
+            var larguraDisponivel = Math.Max(320, areaRolagem.ClientSize.Width - areaRolagem.Padding.Horizontal);
+            var larguraFinal = Math.Min(larguraMaxima, larguraDisponivel);
+            conteudo.Width = larguraFinal;
+            conteudo.Left = areaRolagem.Padding.Left + Math.Max(0, (larguraDisponivel - larguraFinal) / 2);
+            conteudo.Top = areaRolagem.Padding.Top;
+        }
+
+        areaRolagem.Resize += ReposicionarConteudo;
+        form.Shown += ReposicionarConteudo;
+
+        form.Controls.Add(areaRolagem);
+        form.Controls.Add(CriarCabecalho());
+
+        return conteudo;
+    }
+
+    public static FlowLayoutPanel CriarBarraAcoesInferior()
+    {
+        return new FlowLayoutPanel
+        {
+            Dock = DockStyle.Top,
+            AutoSize = true,
+            AutoSizeMode = AutoSizeMode.GrowAndShrink,
+            FlowDirection = FlowDirection.RightToLeft,
+            WrapContents = false,
+            Margin = new Padding(0, Espacamento * 2, 0, 0),
+            Padding = new Padding(0)
+        };
     }
 }

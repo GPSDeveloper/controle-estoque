@@ -18,72 +18,94 @@ public class SaidaMaterialForm : Form
     private readonly RadioButton _rbMatricula = new() { Text = "Matrícula", AutoSize = true };
     private readonly TextBox _txtIdentificacao = new() { Width = 250 };
     private readonly ComboBox _cmbSetor = new() { Width = 350, DropDownStyle = ComboBoxStyle.DropDownList };
+    private readonly Label _lblIdentificacao = new() { Text = "CPF:", AutoSize = true };
+    private Panel _conteudo = null!;
 
     private List<Material> _materiais = new();
 
     public SaidaMaterialForm()
     {
         ThemeHelper.ConfigurarFormulario(this, "Saída de Material");
-        Controls.Add(ThemeHelper.CriarCabecalho());
+        _conteudo = ThemeHelper.CriarConteudoPrincipal(this, 860, new Padding(0));
         MontarInterface();
         CarregarDados();
     }
 
     private void MontarInterface()
     {
-        var panel = new Panel { Dock = DockStyle.Fill, Padding = new Padding(30, 90, 30, 20) };
-        int y = 0;
-
-        void AddField(string label, Control control)
+        var formGrid = new TableLayoutPanel
         {
-            panel.Controls.Add(new Label { Text = label, AutoSize = true, Location = new Point(0, y) });
-            control.Location = new Point(0, y + 22);
-            panel.Controls.Add(control);
-            y += 55;
+            Dock = DockStyle.Top,
+            AutoSize = true,
+            AutoSizeMode = AutoSizeMode.GrowAndShrink,
+            ColumnCount = 2,
+            Margin = new Padding(0)
+        };
+        formGrid.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 220));
+        formGrid.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+
+        void AddField(Control label, Control control)
+        {
+            var linha = formGrid.RowCount++;
+            formGrid.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            label.Margin = new Padding(0, 8, 8, 0);
+            control.Dock = DockStyle.Top;
+            formGrid.Controls.Add(label, 0, linha);
+            formGrid.Controls.Add(control, 1, linha);
         }
 
-        AddField("Material (digite para buscar):", _cmbMaterial);
+        AddField(new Label { Text = "Material (digite para buscar):", AutoSize = true }, _cmbMaterial);
         _cmbMaterial.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
         _cmbMaterial.AutoCompleteSource = AutoCompleteSource.ListItems;
         _cmbMaterial.SelectedIndexChanged += (_, _) => AtualizarDisponivel();
         _cmbMaterial.TextUpdate += (_, _) => FiltrarMateriais();
 
-        _lblDisponivel.Location = new Point(0, y);
-        panel.Controls.Add(_lblDisponivel);
-        y += 25;
+        var linhaDisponivel = formGrid.RowCount++;
+        formGrid.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        formGrid.Controls.Add(new Label(), 0, linhaDisponivel);
+        formGrid.Controls.Add(_lblDisponivel, 1, linhaDisponivel);
 
-        AddField("Quantidade:", _numQuantidade);
-        AddField("Nome de quem retirou:", _txtNome);
+        AddField(new Label { Text = "Quantidade:", AutoSize = true }, _numQuantidade);
+        AddField(new Label { Text = "Nome de quem retirou:", AutoSize = true }, _txtNome);
 
-        panel.Controls.Add(new Label { Text = "Identificação:", AutoSize = true, Location = new Point(0, y) });
-        _rbCpf.Location = new Point(0, y + 22);
-        _rbMatricula.Location = new Point(80, y + 22);
-        panel.Controls.Add(_rbCpf);
-        panel.Controls.Add(_rbMatricula);
-        y += 50;
+        var identificacaoPanel = new FlowLayoutPanel
+        {
+            Dock = DockStyle.Top,
+            AutoSize = true,
+            AutoSizeMode = AutoSizeMode.GrowAndShrink,
+            FlowDirection = FlowDirection.LeftToRight,
+            WrapContents = false,
+            Margin = new Padding(0)
+        };
+        identificacaoPanel.Controls.Add(_rbCpf);
+        identificacaoPanel.Controls.Add(_rbMatricula);
+        AddField(new Label { Text = "Tipo de identificação:", AutoSize = true }, identificacaoPanel);
 
-        AddField(_rbCpf.Checked ? "CPF:" : "Matrícula:", _txtIdentificacao);
+        AddField(_lblIdentificacao, _txtIdentificacao);
         _rbCpf.CheckedChanged += (_, _) => AtualizarLabelIdentificacao();
         _rbMatricula.CheckedChanged += (_, _) => AtualizarLabelIdentificacao();
 
-        AddField("Setor:", _cmbSetor);
+        AddField(new Label { Text = "Setor:", AutoSize = true }, _cmbSetor);
 
         var btnRetirar = ThemeHelper.CriarBotao("Retirar", 150, 40);
-        btnRetirar.Location = new Point(0, y);
         btnRetirar.Click += (_, _) => Retirar();
 
         var btnFechar = ThemeHelper.CriarBotao("Fechar", 120, 40);
-        btnFechar.Location = new Point(160, y);
         btnFechar.BackColor = Color.Gray;
         btnFechar.Click += (_, _) => Close();
 
-        panel.Controls.AddRange(new Control[] { btnRetirar, btnFechar });
-        Controls.Add(panel);
+        var barraAcoes = ThemeHelper.CriarBarraAcoesInferior();
+        barraAcoes.Controls.Add(btnFechar);
+        barraAcoes.Controls.Add(btnRetirar);
+
+        _conteudo.Controls.Add(barraAcoes);
+        _conteudo.Controls.Add(new Panel { Dock = DockStyle.Top, Height = 12 });
+        _conteudo.Controls.Add(formGrid);
     }
 
     private void AtualizarLabelIdentificacao()
     {
-        // Label is static in this layout; identification field is shared
+        _lblIdentificacao.Text = _rbCpf.Checked ? "CPF:" : "Matrícula:";
     }
 
     private void CarregarDados()
@@ -101,7 +123,8 @@ public class SaidaMaterialForm : Form
 
     private void FiltrarMateriais()
     {
-        var filtro = _cmbMaterial.Text.Trim().ToLower();
+        var filtroOriginal = _cmbMaterial.Text.Trim();
+        var filtro = filtroOriginal.ToLower();
         var filtrados = string.IsNullOrEmpty(filtro)
             ? _materiais
             : _materiais.Where(m => m.Nome.ToLower().Contains(filtro)).ToList();
@@ -110,8 +133,8 @@ public class SaidaMaterialForm : Form
         foreach (var m in filtrados)
             _cmbMaterial.Items.Add(m.Nome);
         _cmbMaterial.DroppedDown = true;
-        _cmbMaterial.Text = filtro;
-        _cmbMaterial.SelectionStart = filtro.Length;
+        _cmbMaterial.Text = filtroOriginal;
+        _cmbMaterial.SelectionStart = filtroOriginal.Length;
     }
 
     private Material? ObterMaterialSelecionado()

@@ -7,21 +7,20 @@ public class HistoricoSaidasForm : Form
 {
     private readonly SaidaService _service = new();
     private readonly DataGridView _grid = new();
+    private Panel _conteudo = null!;
 
     public HistoricoSaidasForm()
     {
         ThemeHelper.ConfigurarFormulario(this, "Histórico de Saídas", 1000, 600);
-        Controls.Add(ThemeHelper.CriarCabecalho());
+        _conteudo = ThemeHelper.CriarConteudoPrincipal(this, 1200, new Padding(0));
         MontarInterface();
         CarregarDados();
     }
 
     private void MontarInterface()
     {
-        var panel = new Panel { Dock = DockStyle.Fill, Padding = new Padding(20, 90, 20, 20) };
-
         _grid.Dock = DockStyle.Top;
-        _grid.Height = 400;
+        _grid.Height = 430;
         _grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         _grid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
         _grid.ReadOnly = true;
@@ -29,25 +28,27 @@ public class HistoricoSaidasForm : Form
         _grid.MultiSelect = false;
 
         var btnEditar = ThemeHelper.CriarBotao("Editar", 120, 35);
-        btnEditar.Location = new Point(0, 420);
         btnEditar.Click += (_, _) => Editar();
 
         var btnExcluir = ThemeHelper.CriarBotao("Excluir", 120, 35);
-        btnExcluir.Location = new Point(130, 420);
         btnExcluir.BackColor = Color.DarkRed;
         btnExcluir.Click += (_, _) => Excluir();
 
         var btnAtualizar = ThemeHelper.CriarBotao("Atualizar", 120, 35);
-        btnAtualizar.Location = new Point(260, 420);
         btnAtualizar.Click += (_, _) => CarregarDados();
 
         var btnFechar = ThemeHelper.CriarBotao("Fechar", 120, 35);
-        btnFechar.Location = new Point(820, 420);
         btnFechar.BackColor = Color.Gray;
         btnFechar.Click += (_, _) => Close();
 
-        panel.Controls.AddRange(new Control[] { _grid, btnEditar, btnExcluir, btnAtualizar, btnFechar });
-        Controls.Add(panel);
+        var barraAcoes = ThemeHelper.CriarBarraAcoesInferior();
+        barraAcoes.Controls.Add(btnFechar);
+        barraAcoes.Controls.Add(btnAtualizar);
+        barraAcoes.Controls.Add(btnExcluir);
+        barraAcoes.Controls.Add(btnEditar);
+
+        _conteudo.Controls.Add(barraAcoes);
+        _conteudo.Controls.Add(_grid);
     }
 
     private void CarregarDados()

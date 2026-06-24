@@ -8,29 +8,42 @@ public class SetorForm : Form
     private readonly SetorService _service = new();
     private readonly DataGridView _grid = new();
     private readonly TextBox _txtNome = new() { Width = 300 };
+    private Panel _conteudo = null!;
 
     public SetorForm()
     {
         ThemeHelper.ConfigurarFormulario(this, "Gerenciar Setores");
-        Controls.Add(ThemeHelper.CriarCabecalho());
+        _conteudo = ThemeHelper.CriarConteudoPrincipal(this, 1100, new Padding(0));
         MontarInterface();
         CarregarDados();
     }
 
     private void MontarInterface()
     {
-        var panel = new Panel { Dock = DockStyle.Fill, Padding = new Padding(20, 90, 20, 20) };
+        var topo = new TableLayoutPanel
+        {
+            Dock = DockStyle.Top,
+            AutoSize = true,
+            AutoSizeMode = AutoSizeMode.GrowAndShrink,
+            ColumnCount = 3,
+            Margin = new Padding(0)
+        };
+        topo.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+        topo.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
+        topo.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
 
-        var lbl = new Label { Text = "Nome do setor:", AutoSize = true, Location = new Point(0, 0) };
-        _txtNome.Location = new Point(0, 25);
-
+        var lbl = new Label { Text = "Nome do setor:", AutoSize = true, Margin = new Padding(0, 10, 8, 0) };
+        _txtNome.Dock = DockStyle.Top;
         var btnAdicionar = ThemeHelper.CriarBotao("Adicionar", 120, 35);
-        btnAdicionar.Location = new Point(310, 23);
+        btnAdicionar.Margin = new Padding(8, 0, 0, 0);
         btnAdicionar.Click += (_, _) => Adicionar();
 
-        _grid.Location = new Point(0, 70);
-        _grid.Size = new Size(820, 350);
-        _grid.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom;
+        topo.Controls.Add(lbl, 0, 0);
+        topo.Controls.Add(_txtNome, 1, 0);
+        topo.Controls.Add(btnAdicionar, 2, 0);
+
+        _grid.Dock = DockStyle.Top;
+        _grid.Height = 420;
         _grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         _grid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
         _grid.ReadOnly = true;
@@ -38,24 +51,25 @@ public class SetorForm : Form
         _grid.MultiSelect = false;
 
         var btnEditar = ThemeHelper.CriarBotao("Editar", 120, 35);
-        btnEditar.Location = new Point(0, 430);
-        btnEditar.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
         btnEditar.Click += (_, _) => Editar();
 
         var btnExcluir = ThemeHelper.CriarBotao("Excluir", 120, 35);
-        btnExcluir.Location = new Point(130, 430);
-        btnExcluir.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
         btnExcluir.BackColor = Color.DarkRed;
         btnExcluir.Click += (_, _) => Excluir();
 
         var btnFechar = ThemeHelper.CriarBotao("Fechar", 120, 35);
-        btnFechar.Location = new Point(700, 430);
-        btnFechar.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
         btnFechar.BackColor = Color.Gray;
         btnFechar.Click += (_, _) => Close();
 
-        panel.Controls.AddRange(new Control[] { lbl, _txtNome, btnAdicionar, _grid, btnEditar, btnExcluir, btnFechar });
-        Controls.Add(panel);
+        var barraAcoes = ThemeHelper.CriarBarraAcoesInferior();
+        barraAcoes.Controls.Add(btnFechar);
+        barraAcoes.Controls.Add(btnExcluir);
+        barraAcoes.Controls.Add(btnEditar);
+
+        _conteudo.Controls.Add(barraAcoes);
+        _conteudo.Controls.Add(_grid);
+        _conteudo.Controls.Add(new Panel { Dock = DockStyle.Top, Height = 12 });
+        _conteudo.Controls.Add(topo);
     }
 
     private void CarregarDados()

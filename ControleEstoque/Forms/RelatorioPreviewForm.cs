@@ -9,6 +9,7 @@ public class RelatorioPreviewForm : Form
     private readonly RelatorioResultado _relatorio;
     private readonly bool _incluirLocalizacao;
     private readonly DataGridView _grid = new();
+    private Panel _conteudo = null!;
 
     public RelatorioPreviewForm(RelatorioResultado relatorio, bool incluirLocalizacao)
     {
@@ -16,26 +17,24 @@ public class RelatorioPreviewForm : Form
         _incluirLocalizacao = incluirLocalizacao;
 
         ThemeHelper.ConfigurarFormulario(this, "Visualizar Relatório", 900, 600);
-        Controls.Add(ThemeHelper.CriarCabecalho());
+        _conteudo = ThemeHelper.CriarConteudoPrincipal(this, 1200, new Padding(0));
         MontarInterface();
         CarregarDados();
     }
 
     private void MontarInterface()
     {
-        var panel = new Panel { Dock = DockStyle.Fill, Padding = new Padding(20, 90, 20, 20) };
-
         var lblTitulo = new Label
         {
             Text = $"{_relatorio.Titulo} — {_relatorio.Subtitulo}",
             AutoSize = true,
             Font = ThemeHelper.FonteTitulo,
-            Location = new Point(0, 0)
+            Dock = DockStyle.Top,
+            Margin = new Padding(0, 0, 0, 8)
         };
 
-        _grid.Location = new Point(0, 40);
-        _grid.Size = new Size(840, 380);
-        _grid.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom;
+        _grid.Dock = DockStyle.Top;
+        _grid.Height = 420;
         _grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         _grid.ReadOnly = true;
         _grid.AllowUserToAddRows = false;
@@ -44,29 +43,30 @@ public class RelatorioPreviewForm : Form
         {
             AutoSize = true,
             Font = ThemeHelper.FonteBotao,
-            Location = new Point(0, 430),
-            Anchor = AnchorStyles.Bottom | AnchorStyles.Left
+            Margin = new Padding(0, 8, 0, 0)
         };
         lblTotal.Text = $"Total Geral: {_relatorio.TotalGeral:C2}";
 
         var btnImprimir = ThemeHelper.CriarBotao("Imprimir", 120, 35);
-        btnImprimir.Location = new Point(500, 430);
-        btnImprimir.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
         btnImprimir.Click += (_, _) => new PrintReportHelper(_relatorio, _incluirLocalizacao).Imprimir();
 
         var btnPdf = ThemeHelper.CriarBotao("Salvar PDF", 130, 35);
-        btnPdf.Location = new Point(630, 430);
-        btnPdf.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
         btnPdf.Click += (_, _) => SalvarPdf();
 
         var btnFechar = ThemeHelper.CriarBotao("Fechar", 100, 35);
-        btnFechar.Location = new Point(770, 430);
-        btnFechar.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
         btnFechar.BackColor = Color.Gray;
         btnFechar.Click += (_, _) => Close();
 
-        panel.Controls.AddRange(new Control[] { lblTitulo, _grid, lblTotal, btnImprimir, btnPdf, btnFechar });
-        Controls.Add(panel);
+        var barraAcoes = ThemeHelper.CriarBarraAcoesInferior();
+        barraAcoes.Controls.Add(btnFechar);
+        barraAcoes.Controls.Add(btnPdf);
+        barraAcoes.Controls.Add(btnImprimir);
+
+        _conteudo.Controls.Add(barraAcoes);
+        _conteudo.Controls.Add(lblTotal);
+        _conteudo.Controls.Add(_grid);
+        _conteudo.Controls.Add(new Panel { Dock = DockStyle.Top, Height = 8 });
+        _conteudo.Controls.Add(lblTitulo);
     }
 
     private void CarregarDados()

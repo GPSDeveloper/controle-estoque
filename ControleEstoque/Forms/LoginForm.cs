@@ -14,33 +14,40 @@ public class LoginForm : Form
         ThemeHelper.ConfigurarFormulario(this, "Login - Controle de Estoque", 450, 380);
         FormBorderStyle = FormBorderStyle.FixedDialog;
         MaximizeBox = false;
-        var cabecalho = ThemeHelper.CriarCabecalho();
+        var conteudo = ThemeHelper.CriarConteudoPrincipal(this, 420, new Padding(0));
 
-        var panel = new Panel
+        var tabela = new TableLayoutPanel
         {
-            Dock = DockStyle.Fill,
-            Padding = new Padding(40, 20, 40, 20)
+            Dock = DockStyle.Top,
+            AutoSize = true,
+            AutoSizeMode = AutoSizeMode.GrowAndShrink,
+            ColumnCount = 1,
+            Padding = new Padding(16),
+            Margin = new Padding(0)
         };
+        tabela.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
 
-        var lblLogin = new Label { Text = "Login:", AutoSize = true, Location = new Point(0, 20) };
-        _txtLogin.Location = new Point(0, 45);
+        _txtLogin.Dock = DockStyle.Top;
+        _txtSenha.Dock = DockStyle.Top;
 
-        var lblSenha = new Label { Text = "Senha:", AutoSize = true, Location = new Point(0, 90) };
-        _txtSenha.Location = new Point(0, 115);
-
-        var btnEntrar = ThemeHelper.CriarBotao("Entrar", 280, 40);
-        btnEntrar.Location = new Point(0, 170);
+        var btnEntrar = ThemeHelper.CriarBotao("Entrar", 160, 40);
         btnEntrar.Click += BtnEntrar_Click;
 
-        var btnSair = ThemeHelper.CriarBotao("Sair", 280, 35);
-        btnSair.Location = new Point(0, 220);
+        var btnSair = ThemeHelper.CriarBotao("Sair", 120, 40);
         btnSair.BackColor = Color.Gray;
         btnSair.Click += (_, _) => Close();
 
-        panel.Controls.AddRange(new Control[] { lblLogin, _txtLogin, lblSenha, _txtSenha, btnEntrar, btnSair });
-        // Mantem a ordem de dock correta: cabecalho (Top) e conteudo (Fill).
-        Controls.Add(panel);
-        Controls.Add(cabecalho);
+        var barraAcoes = ThemeHelper.CriarBarraAcoesInferior();
+        barraAcoes.Controls.Add(btnSair);
+        barraAcoes.Controls.Add(btnEntrar);
+
+        tabela.Controls.Add(new Label { Text = "Login", AutoSize = true, Margin = new Padding(0, 0, 0, 4) });
+        tabela.Controls.Add(_txtLogin);
+        tabela.Controls.Add(new Label { Text = "Senha", AutoSize = true, Margin = new Padding(0, 12, 0, 4) });
+        tabela.Controls.Add(_txtSenha);
+        tabela.Controls.Add(barraAcoes);
+
+        conteudo.Controls.Add(tabela);
 
         AcceptButton = btnEntrar;
         _txtLogin.Focus();

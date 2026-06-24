@@ -9,16 +9,17 @@ public class MainForm : Form
         ThemeHelper.ConfigurarFormulario(this, "Controle de Estoque - SEMSRJ", 500, 580);
         FormBorderStyle = FormBorderStyle.FixedSingle;
         MaximizeBox = false;
-
-        Controls.Add(ThemeHelper.CriarCabecalho());
+        var conteudo = ThemeHelper.CriarConteudoPrincipal(this, 420, new Padding(0));
 
         var panel = new FlowLayoutPanel
         {
-            Dock = DockStyle.Fill,
+            Dock = DockStyle.Top,
             FlowDirection = FlowDirection.TopDown,
             WrapContents = false,
-            AutoScroll = true,
-            Padding = new Padding(30, 90, 30, 20)
+            AutoSize = true,
+            AutoSizeMode = AutoSizeMode.GrowAndShrink,
+            Margin = new Padding(0),
+            Padding = new Padding(0)
         };
 
         var botoes = new (string Texto, Action Acao)[]
@@ -34,14 +35,14 @@ public class MainForm : Form
 
         foreach (var (texto, acao) in botoes)
         {
-            var btn = ThemeHelper.CriarBotao(texto, 380, 50);
+            var btn = ThemeHelper.CriarBotao(texto, 400, 50);
             if (texto == "Sair")
                 btn.BackColor = Color.DarkRed;
             btn.Click += (_, _) => acao();
             panel.Controls.Add(btn);
         }
 
-        Controls.Add(panel);
+        conteudo.Controls.Add(panel);
     }
 
     private static void AbrirForm<T>() where T : Form, new()
