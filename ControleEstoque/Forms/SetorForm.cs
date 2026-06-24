@@ -42,8 +42,7 @@ public class SetorForm : Form
         topo.Controls.Add(_txtNome, 1, 0);
         topo.Controls.Add(btnAdicionar, 2, 0);
 
-        _grid.Dock = DockStyle.Top;
-        _grid.Height = 420;
+        _grid.Dock = DockStyle.Fill;
         _grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         _grid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
         _grid.ReadOnly = true;
@@ -66,10 +65,12 @@ public class SetorForm : Form
         barraAcoes.Controls.Add(btnExcluir);
         barraAcoes.Controls.Add(btnEditar);
 
+        var areaGrid = new Panel { Dock = DockStyle.Fill };
+        areaGrid.Controls.Add(_grid);
+        areaGrid.Controls.Add(topo);
+
         _conteudo.Controls.Add(barraAcoes);
-        _conteudo.Controls.Add(_grid);
-        _conteudo.Controls.Add(new Panel { Dock = DockStyle.Top, Height = 12 });
-        _conteudo.Controls.Add(topo);
+        _conteudo.Controls.Add(areaGrid);
     }
 
     private void CarregarDados()

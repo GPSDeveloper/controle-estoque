@@ -11,16 +11,16 @@ public class MainForm : Form
         MaximizeBox = false;
         var conteudo = ThemeHelper.CriarConteudoPrincipal(this, 420, new Padding(0));
 
-        var panel = new FlowLayoutPanel
+        var panel = new TableLayoutPanel
         {
             Dock = DockStyle.Top,
-            FlowDirection = FlowDirection.TopDown,
-            WrapContents = false,
             AutoSize = true,
             AutoSizeMode = AutoSizeMode.GrowAndShrink,
+            ColumnCount = 1,
             Margin = new Padding(0),
-            Padding = new Padding(0)
+            Padding = new Padding(0),
         };
+        panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100));
 
         var botoes = new (string Texto, Action Acao)[]
         {
@@ -36,10 +36,14 @@ public class MainForm : Form
         foreach (var (texto, acao) in botoes)
         {
             var btn = ThemeHelper.CriarBotao(texto, 400, 50);
+            btn.Dock = DockStyle.Top;
+            btn.Width = 0;
             if (texto == "Sair")
                 btn.BackColor = Color.DarkRed;
             btn.Click += (_, _) => acao();
-            panel.Controls.Add(btn);
+            var linha = panel.RowCount++;
+            panel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            panel.Controls.Add(btn, 0, linha);
         }
 
         conteudo.Controls.Add(panel);

@@ -67,47 +67,24 @@ public static class ThemeHelper
             AutoScroll = true,
             Padding = new Padding(24)
         };
-
-        var conteudo = new Panel
-        {
-            AutoSize = true,
-            AutoSizeMode = AutoSizeMode.GrowAndShrink,
-            MaximumSize = new Size(larguraMaxima, 0),
-            MinimumSize = new Size(320, 0),
-            Padding = paddingConteudo ?? new Padding(0)
-        };
-
-        areaRolagem.Controls.Add(conteudo);
-
-        void ReposicionarConteudo(object? _, EventArgs __)
-        {
-            var larguraDisponivel = Math.Max(320, areaRolagem.ClientSize.Width - areaRolagem.Padding.Horizontal);
-            var larguraFinal = Math.Min(larguraMaxima, larguraDisponivel);
-            conteudo.Width = larguraFinal;
-            conteudo.Left = areaRolagem.Padding.Left + Math.Max(0, (larguraDisponivel - larguraFinal) / 2);
-            conteudo.Top = areaRolagem.Padding.Top;
-        }
-
-        areaRolagem.Resize += ReposicionarConteudo;
-        form.Shown += ReposicionarConteudo;
+        areaRolagem.Padding = paddingConteudo ?? new Padding(24);
 
         form.Controls.Add(areaRolagem);
         form.Controls.Add(CriarCabecalho());
 
-        return conteudo;
+        return areaRolagem;
     }
 
     public static FlowLayoutPanel CriarBarraAcoesInferior()
     {
         return new FlowLayoutPanel
         {
-            Dock = DockStyle.Top,
-            AutoSize = true,
-            AutoSizeMode = AutoSizeMode.GrowAndShrink,
+            Dock = DockStyle.Bottom,
+            Height = 52,
             FlowDirection = FlowDirection.RightToLeft,
             WrapContents = false,
-            Margin = new Padding(0, Espacamento * 2, 0, 0),
-            Padding = new Padding(0)
+            Margin = new Padding(0),
+            Padding = new Padding(0, Espacamento, 0, 0)
         };
     }
 }

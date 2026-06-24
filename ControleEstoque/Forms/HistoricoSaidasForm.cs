@@ -19,8 +19,7 @@ public class HistoricoSaidasForm : Form
 
     private void MontarInterface()
     {
-        _grid.Dock = DockStyle.Top;
-        _grid.Height = 430;
+        _grid.Dock = DockStyle.Fill;
         _grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         _grid.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
         _grid.ReadOnly = true;
@@ -47,8 +46,11 @@ public class HistoricoSaidasForm : Form
         barraAcoes.Controls.Add(btnExcluir);
         barraAcoes.Controls.Add(btnEditar);
 
+        var areaGrid = new Panel { Dock = DockStyle.Fill };
+        areaGrid.Controls.Add(_grid);
+
         _conteudo.Controls.Add(barraAcoes);
-        _conteudo.Controls.Add(_grid);
+        _conteudo.Controls.Add(areaGrid);
     }
 
     private void CarregarDados()

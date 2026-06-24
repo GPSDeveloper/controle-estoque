@@ -33,8 +33,7 @@ public class RelatorioPreviewForm : Form
             Margin = new Padding(0, 0, 0, 8)
         };
 
-        _grid.Dock = DockStyle.Top;
-        _grid.Height = 420;
+        _grid.Dock = DockStyle.Fill;
         _grid.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         _grid.ReadOnly = true;
         _grid.AllowUserToAddRows = false;
@@ -62,11 +61,13 @@ public class RelatorioPreviewForm : Form
         barraAcoes.Controls.Add(btnPdf);
         barraAcoes.Controls.Add(btnImprimir);
 
+        var areaPrincipal = new Panel { Dock = DockStyle.Fill };
+        areaPrincipal.Controls.Add(_grid);
+        areaPrincipal.Controls.Add(lblTitulo);
+
         _conteudo.Controls.Add(barraAcoes);
         _conteudo.Controls.Add(lblTotal);
-        _conteudo.Controls.Add(_grid);
-        _conteudo.Controls.Add(new Panel { Dock = DockStyle.Top, Height = 8 });
-        _conteudo.Controls.Add(lblTitulo);
+        _conteudo.Controls.Add(areaPrincipal);
     }
 
     private void CarregarDados()
