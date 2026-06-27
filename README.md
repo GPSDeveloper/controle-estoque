@@ -238,6 +238,7 @@ controle-estoque/
 ├── docker/
 │   ├── Dockerfile.migrate      # Container que aplica migrations
 │   └── migrate-entrypoint.sh
+├── ControleEstoque.Migrator/   # Console app net8.0 para migrations no Docker
 ├── scripts/
 │   ├── docker-up.ps1           # Script de subida (Windows)
 │   ├── docker-up.sh            # Script de subida (Linux/macOS)
@@ -298,7 +299,7 @@ docker compose build --no-cache migrate
 docker compose up -d
 ```
 
-**Erro `ControleEstoque.deps.json does not exist` ou `Microsoft.WindowsDesktop.App was not found`:** imagem antiga de migrate. Atualize para a versão atual do projeto (migrate cross-platform em `net8.0`) e rode rebuild sem cache:
+**Erro `ControleEstoque.deps.json does not exist` ou `Microsoft.WindowsDesktop.App was not found`:** imagem antiga de migrate. A versão atual usa o `ControleEstoque.Migrator` (console `net8.0`), compatível com Linux. Atualize para a versão atual do projeto e rode rebuild sem cache:
 
 ```powershell
 docker compose down

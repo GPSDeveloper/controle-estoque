@@ -2,14 +2,9 @@
 set -e
 
 CONN="${CONNECTION_STRING:?CONNECTION_STRING não definida}"
+export CONNECTION_STRING="$CONN"
 
 echo "Aplicando migrations no banco de dados..."
-dotnet ef database update \
-  --project ControleEstoque/ControleEstoque.csproj \
-  --startup-project ControleEstoque/ControleEstoque.csproj \
-  --configuration Release \
-  --framework net8.0 \
-  --no-build \
-  --connection "$CONN"
+dotnet /src/ControleEstoque.Migrator/bin/Release/net8.0/ControleEstoque.Migrator.dll
 
 echo "Migrations aplicadas com sucesso."
