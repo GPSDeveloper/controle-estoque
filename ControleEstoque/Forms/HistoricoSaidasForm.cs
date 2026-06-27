@@ -12,7 +12,7 @@ public class HistoricoSaidasForm : Form
     public HistoricoSaidasForm()
     {
         ThemeHelper.ConfigurarFormulario(this, "Histórico de Saídas", 1000, 600);
-        _conteudo = ThemeHelper.CriarConteudoPrincipal(this, 1200, new Padding(0));
+        _conteudo = ThemeHelper.CriarConteudoPrincipal(this, "Histórico de Saídas", 1200, new Padding(0));
         MontarInterface();
         CarregarDados();
     }

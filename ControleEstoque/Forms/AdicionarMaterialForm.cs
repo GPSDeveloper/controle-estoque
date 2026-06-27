@@ -17,7 +17,7 @@ public class AdicionarMaterialForm : Form
     public AdicionarMaterialForm()
     {
         ThemeHelper.ConfigurarFormulario(this, "Adicionar Material");
-        _conteudo = ThemeHelper.CriarConteudoPrincipal(this, 760, new Padding(0));
+        _conteudo = ThemeHelper.CriarConteudoPrincipal(this, "Adicionar Material", 760, new Padding(0));
         MontarInterface();
     }
 

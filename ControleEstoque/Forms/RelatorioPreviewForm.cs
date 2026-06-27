@@ -17,7 +17,7 @@ public class RelatorioPreviewForm : Form
         _incluirLocalizacao = incluirLocalizacao;
 
         ThemeHelper.ConfigurarFormulario(this, "Visualizar Relatório", 900, 600);
-        _conteudo = ThemeHelper.CriarConteudoPrincipal(this, 1200, new Padding(0));
+        _conteudo = ThemeHelper.CriarConteudoPrincipal(this, "Gerar Relatórios", 1200, new Padding(0));
         MontarInterface();
         CarregarDados();
     }

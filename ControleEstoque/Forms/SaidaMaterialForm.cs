@@ -26,7 +26,7 @@ public class SaidaMaterialForm : Form
     public SaidaMaterialForm()
     {
         ThemeHelper.ConfigurarFormulario(this, "Saída de Material");
-        _conteudo = ThemeHelper.CriarConteudoPrincipal(this, 860, new Padding(0));
+        _conteudo = ThemeHelper.CriarConteudoPrincipal(this, "Saída de Material", 860, new Padding(0));
         MontarInterface();
         CarregarDados();
     }

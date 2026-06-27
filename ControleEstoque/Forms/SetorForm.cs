@@ -13,7 +13,7 @@ public class SetorForm : Form
     public SetorForm()
     {
         ThemeHelper.ConfigurarFormulario(this, "Gerenciar Setores");
-        _conteudo = ThemeHelper.CriarConteudoPrincipal(this, 1100, new Padding(0));
+        _conteudo = ThemeHelper.CriarConteudoPrincipal(this, "Adicionar Setor", 1100, new Padding(0));
         MontarInterface();
         CarregarDados();
     }

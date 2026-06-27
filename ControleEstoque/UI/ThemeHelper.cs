@@ -10,7 +10,7 @@ public static class ThemeHelper
     public static readonly Font FonteSubtitulo = new("Segoe UI", 10F, FontStyle.Regular);
     public static readonly Font FonteBotao = new("Segoe UI", 10F, FontStyle.Bold);
 
-    public static Panel CriarCabecalho()
+    public static Panel CriarCabecalho(string tituloFluxo)
     {
         var panel = new Panel
         {
@@ -21,7 +21,7 @@ public static class ThemeHelper
 
         var lbl = new Label
         {
-            Text = Instituicao,
+            Text = tituloFluxo,
             ForeColor = Color.White,
             Font = FonteTitulo,
             AutoSize = false,
@@ -59,7 +59,11 @@ public static class ThemeHelper
         form.MinimumSize = new Size(Math.Min(largura, 700), Math.Min(altura, 500));
     }
 
-    public static Panel CriarConteudoPrincipal(Form form, int larguraMaxima = 1000, Padding? paddingConteudo = null)
+    public static Panel CriarConteudoPrincipal(
+        Form form,
+        string tituloFluxo,
+        int larguraMaxima = 1000,
+        Padding? paddingConteudo = null)
     {
         var areaRolagem = new Panel
         {
@@ -70,7 +74,7 @@ public static class ThemeHelper
         areaRolagem.Padding = paddingConteudo ?? new Padding(24);
 
         form.Controls.Add(areaRolagem);
-        form.Controls.Add(CriarCabecalho());
+        form.Controls.Add(CriarCabecalho(tituloFluxo));
 
         return areaRolagem;
     }

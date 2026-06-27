@@ -21,7 +21,7 @@ public class RelatoriosForm : Form
     public RelatoriosForm()
     {
         ThemeHelper.ConfigurarFormulario(this, "Gerar Relatórios", 550, 450);
-        _conteudo = ThemeHelper.CriarConteudoPrincipal(this, 760, new Padding(0));
+        _conteudo = ThemeHelper.CriarConteudoPrincipal(this, "Gerar Relatórios", 760, new Padding(0));
         MontarInterface();
         CarregarSetores();
     }

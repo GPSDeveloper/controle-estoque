@@ -14,7 +14,7 @@ public class LoginForm : Form
         ThemeHelper.ConfigurarFormulario(this, "Login - Controle de Estoque", 450, 380);
         FormBorderStyle = FormBorderStyle.FixedDialog;
         MaximizeBox = false;
-        var conteudo = ThemeHelper.CriarConteudoPrincipal(this, 420, new Padding(0));
+        var conteudo = ThemeHelper.CriarConteudoPrincipal(this, "Login", 420, new Padding(0));
 
         var tabela = new TableLayoutPanel
         {

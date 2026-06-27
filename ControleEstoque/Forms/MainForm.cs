@@ -9,7 +9,7 @@ public class MainForm : Form
         ThemeHelper.ConfigurarFormulario(this, "Controle de Estoque - SEMSRJ", 500, 580);
         FormBorderStyle = FormBorderStyle.FixedSingle;
         MaximizeBox = false;
-        var conteudo = ThemeHelper.CriarConteudoPrincipal(this, 420, new Padding(0));
+        var conteudo = ThemeHelper.CriarConteudoPrincipal(this, "Menu Principal", 420, new Padding(0));
 
         var panel = new TableLayoutPanel
         {

@@ -21,7 +21,7 @@ public class EstoqueForm : Form
     public EstoqueForm()
     {
         ThemeHelper.ConfigurarFormulario(this, "Consulta de Estoque", 950, 650);
-        _conteudo = ThemeHelper.CriarConteudoPrincipal(this, 1200, new Padding(0));
+        _conteudo = ThemeHelper.CriarConteudoPrincipal(this, "Estoque", 1200, new Padding(0));
         MontarInterface();
         CarregarMateriais();
     }
