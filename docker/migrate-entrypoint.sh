@@ -8,7 +8,7 @@ dotnet ef database update \
   --project ControleEstoque/ControleEstoque.csproj \
   --startup-project ControleEstoque/ControleEstoque.csproj \
   --configuration Release \
-  --framework net8.0-windows \
+  --framework net8.0 \
   --no-build \
   --connection "$CONN"
 

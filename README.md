@@ -298,7 +298,7 @@ docker compose build --no-cache migrate
 docker compose up -d
 ```
 
-**Erro `ControleEstoque.deps.json does not exist`:** o `dotnet ef` estava tentando usar `Debug`. Atualize para a versão atual do projeto e rode rebuild sem cache:
+**Erro `ControleEstoque.deps.json does not exist` ou `Microsoft.WindowsDesktop.App was not found`:** imagem antiga de migrate. Atualize para a versão atual do projeto (migrate cross-platform em `net8.0`) e rode rebuild sem cache:
 
 ```powershell
 docker compose down
