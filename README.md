@@ -298,6 +298,14 @@ docker compose build --no-cache migrate
 docker compose up -d
 ```
 
+**Erro `ControleEstoque.deps.json does not exist`:** o `dotnet ef` estava tentando usar `Debug`. Atualize para a versão atual do projeto e rode rebuild sem cache:
+
+```powershell
+docker compose down
+docker compose build --no-cache migrate
+docker compose up -d
+```
+
 **Conflito de concorrência no estoque:** em cenários com múltiplos usuários retirando/editando ao mesmo tempo, o sistema pode retornar "Conflito de concorrência no estoque. Tente novamente.". Basta repetir a operação; o sistema usa transações serializáveis com retentativa automática para proteger o saldo.
 
 **Login inválido:** use `almoxarifado12` / `estoque123`. O usuário é criado automaticamente na primeira execução com banco vazio.
