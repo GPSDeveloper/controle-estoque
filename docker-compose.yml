@@ -23,6 +23,7 @@ services:
       context: .
       dockerfile: docker/Dockerfile.migrate
     container_name: controle-estoque-migrate
+    entrypoint: ["sh", "/migrate-entrypoint.sh"]
     depends_on:
       postgres:
         condition: service_healthy

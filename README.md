@@ -290,6 +290,14 @@ Todos os relatórios podem ser **visualizados**, **impressos** ou **salvos em PD
 
 **Migrations não aplicadas:** execute `docker compose up migrate --build` ou `dotnet ef database update` na pasta `ControleEstoque`.
 
+**Erro `exec /migrate-entrypoint.sh: no such file or directory`:** faça rebuild sem cache do serviço de migration:
+
+```powershell
+docker compose down
+docker compose build --no-cache migrate
+docker compose up -d
+```
+
 **Conflito de concorrência no estoque:** em cenários com múltiplos usuários retirando/editando ao mesmo tempo, o sistema pode retornar "Conflito de concorrência no estoque. Tente novamente.". Basta repetir a operação; o sistema usa transações serializáveis com retentativa automática para proteger o saldo.
 
 **Login inválido:** use `almoxarifado12` / `estoque123`. O usuário é criado automaticamente na primeira execução com banco vazio.
