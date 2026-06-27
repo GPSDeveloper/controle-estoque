@@ -5,11 +5,17 @@ WORKDIR /src
 COPY ControleEstoque.sln ./
 COPY ControleEstoque/ControleEstoque.csproj ./ControleEstoque/
 COPY ControleEstoque.Migrator/ControleEstoque.Migrator.csproj ./ControleEstoque.Migrator/
-RUN dotnet restore ControleEstoque.Migrator/ControleEstoque.Migrator.csproj
+RUN dotnet restore ControleEstoque.Migrator/ControleEstoque.Migrator.csproj \
+    -p:TargetFramework=net8.0 \
+    -p:EnableWindowsTargeting=true
 
 COPY ControleEstoque/ ./ControleEstoque/
 COPY ControleEstoque.Migrator/ ./ControleEstoque.Migrator/
-RUN dotnet build ControleEstoque.Migrator/ControleEstoque.Migrator.csproj -c Release --no-restore
+RUN dotnet build ControleEstoque.Migrator/ControleEstoque.Migrator.csproj \
+    -c Release \
+    --no-restore \
+    -p:TargetFramework=net8.0 \
+    -p:EnableWindowsTargeting=true
 
 COPY docker/migrate-entrypoint.sh /migrate-entrypoint.sh
 RUN sed -i 's/\r$//' /migrate-entrypoint.sh && chmod +x /migrate-entrypoint.sh

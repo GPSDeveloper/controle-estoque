@@ -291,6 +291,14 @@ Todos os relatórios podem ser **visualizados**, **impressos** ou **salvos em PD
 
 **Migrations não aplicadas:** execute `docker compose up migrate --build` ou `dotnet ef database update` na pasta `ControleEstoque`.
 
+**Erro `failed to solve: ... dotnet restore ControleEstoque.Migrator/ControleEstoque.Migrator.csproj`:** normalmente ocorre quando o restore roda no Linux e tenta resolver também o alvo Windows do projeto principal. Faça rebuild sem cache da imagem de migration para garantir o `Dockerfile.migrate` atualizado:
+
+```powershell
+docker compose down
+docker compose build --no-cache migrate
+docker compose up -d
+```
+
 **Erro `exec /migrate-entrypoint.sh: no such file or directory`:** faça rebuild sem cache do serviço de migration:
 
 ```powershell
